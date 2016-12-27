@@ -1,220 +1,148 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
   
   <title>Android应用如何开机自启动、自启动失败原因 | ShawnLWang&#39;s Blog</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  
+    <meta name="author" content="ShawnLWang">
+  
+  
+    <meta name="description" content="转自：http://www.trinea.cn/android/android-boot_completed-not-work/
+本文主要介绍Android应用如何开机自启动、自启动失败的原因、adb命令发送BOOT_COMPLETED。
+问题：应用程序是否可以在安装后自启动，没有ui的纯service应用如何启动？答案马上揭晓
+1、Android应用如何开机自启动(1)、在AndroidMani">
+  
   <meta name="description" content="转自：http://www.trinea.cn/android/android-boot_completed-not-work/
 本文主要介绍Android应用如何开机自启动、自启动失败的原因、adb命令发送BOOT_COMPLETED。
-问题：应用程序是否可以在安装后自启动，没有ui的纯service应用如何启动？答案马上揭晓1、Android应用如何开机自启动(1)、在AndroidManif">
+问题：应用程序是否可以在安装后自启动，没有ui的纯service应用如何启动？答案马上揭晓
+1、Android应用如何开机自启动(1)、在AndroidMani">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android应用如何开机自启动、自启动失败原因">
 <meta property="og:url" content="http://yoursite.com/2016/12/26/android-start-with-open/index.html">
 <meta property="og:site_name" content="ShawnLWang's Blog">
 <meta property="og:description" content="转自：http://www.trinea.cn/android/android-boot_completed-not-work/
 本文主要介绍Android应用如何开机自启动、自启动失败的原因、adb命令发送BOOT_COMPLETED。
-问题：应用程序是否可以在安装后自启动，没有ui的纯service应用如何启动？答案马上揭晓1、Android应用如何开机自启动(1)、在AndroidManif">
+问题：应用程序是否可以在安装后自启动，没有ui的纯service应用如何启动？答案马上揭晓
+1、Android应用如何开机自启动(1)、在AndroidMani">
 <meta property="og:image" content="http://www.trinea.cn/wp-content/uploads/2013/03/no-broadcast-received.jpg?x24892">
 <meta property="og:image" content="http://www.trinea.cn/wp-content/uploads/2013/03/stopped-state.jpg?x24892">
-<meta property="og:updated_time" content="2016-12-26T08:53:42.000Z">
+<meta property="og:updated_time" content="2016-12-26T09:20:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android应用如何开机自启动、自启动失败原因">
 <meta name="twitter:description" content="转自：http://www.trinea.cn/android/android-boot_completed-not-work/
 本文主要介绍Android应用如何开机自启动、自启动失败的原因、adb命令发送BOOT_COMPLETED。
-问题：应用程序是否可以在安装后自启动，没有ui的纯service应用如何启动？答案马上揭晓1、Android应用如何开机自启动(1)、在AndroidManif">
+问题：应用程序是否可以在安装后自启动，没有ui的纯service应用如何启动？答案马上揭晓
+1、Android应用如何开机自启动(1)、在AndroidMani">
 <meta name="twitter:image" content="http://www.trinea.cn/wp-content/uploads/2013/03/no-broadcast-received.jpg?x24892">
   
     <link rel="alternate" href="/atom.xml" title="ShawnLWang&#39;s Blog" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
   
   <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   
-
 </head>
 
 <body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">ShawnLWang&#39;s Blog</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
+  <div class="wrapper">
+    <header id="header">
+  <div class="title">
+    <h1><a href="/">ShawnLWang&#39;s Blog</a></h1>
+    <p><a href="/"></a></p>
   </div>
+  <nav class="nav">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+      
+        <li><a href="/atom.xml">RSS</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+  <div class="clearfix"></div>
 </header>
-      <div class="outer">
-        <section id="main"><article id="post-android-start-with-open" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/12/26/android-start-with-open/" class="article-date">
-  <time datetime="2016-12-26T08:37:15.000Z" itemprop="datePublished">2016-12-26</time>
+    <div class="content"><article class="post">
+  <header>
+    
+      <div class="icon"></div>
+      <a href="/2016/12/26/android-start-with-open/">
+  <time datetime="2016-12-26T08:37:15.000Z">
+    2016-12-26
+  </time>
 </a>
     
-  </div>
-  <div class="article-inner">
     
-    
-      <header class="article-header">
-        
   
-    <h1 class="article-title" itemprop="name">
-      Android应用如何开机自启动、自启动失败原因
-    </h1>
+    <h1 class="title">Android应用如何开机自启动、自启动失败原因</h1>
   
 
-      </header>
+  </header>
+  
+  <div class="entry">
     
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>转自：<a href="http://www.trinea.cn/android/android-boot_completed-not-work/" target="_blank" rel="external">http://www.trinea.cn/android/android-boot_completed-not-work/</a></p>
+      <p>转自：<a href="http://www.trinea.cn/android/android-boot_completed-not-work/" target="_blank" rel="external">http://www.trinea.cn/android/android-boot_completed-not-work/</a></p>
 <p>本文主要介绍<strong>Android应用如何开机自启动、自启动失败的原因、adb命令发送BOOT_COMPLETED。</strong></p>
-<p>问题：应用程序是否可以在安装后自启动，没有ui的纯service应用如何启动？答案马上揭晓<br>1、Android应用如何开机自启动<br>(1)、在AndroidManifest.xml中注册</p>
+<p>问题：应用程序是否可以在安装后自启动，没有ui的纯service应用如何启动？答案马上揭晓</p>
+<h2 id="1、Android应用如何开机自启动"><a href="#1、Android应用如何开机自启动" class="headerlink" title="1、Android应用如何开机自启动"></a>1、Android应用如何开机自启动</h2><p>(1)、在AndroidManifest.xml中注册</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">manifest</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></div><div class="line">    <span class="attr">package</span>=<span class="string">"cn.trinea.test"</span></div><div class="line">    <span class="attr">android:versionCode</span>=<span class="string">"1"</span></div><div class="line">    <span class="attr">android:versionName</span>=<span class="string">"1.0"</span> &gt;</div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">application</span></span></div><div class="line">        <span class="attr">android:icon</span>=<span class="string">"@drawable/ic_launcher"</span></div><div class="line">        <span class="attr">android:label</span>=<span class="string">"@string/app_name"</span></div><div class="line">        <span class="attr">android:theme</span>=<span class="string">"@style/AppTheme"</span> &gt;</div><div class="line">        <span class="tag">&lt;<span class="name">receiver</span> <span class="attr">android:name</span>=<span class="string">".BootBroadcastReceiver"</span> &gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.BOOT_COMPLETED"</span> /&gt;</span></div><div class="line"></div><div class="line">                <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span> /&gt;</span></div><div class="line">            <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">receiver</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">application</span>&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.RECEIVE_BOOT_COMPLETED"</span> /&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">manifest</span>&gt;</span></div></pre></td></tr></table></figure>
 <p>注意不仅要添加android.intent.action.BOOT_COMPLETED对应的action，还需要添加对应的uses-permission</p>
 <p>(2)、Receiver接收广播进行处理<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BootBroadcastReceiver</span> <span class="keyword">extends</span> <span class="title">BroadcastReceiver</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String TAG = <span class="string">"BootBroadcastReceiver"</span>;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onReceive</span><span class="params">(Context context, Intent intent)</span> </span>&#123;</div><div class="line">        String action = intent.getAction().toString();</div><div class="line">        <span class="keyword">if</span> (action.equals(Intent.ACTION_BOOT_COMPLETED)) &#123;</div><div class="line">			<span class="comment">// u can start your service here</span></div><div class="line">            Toast.makeText(context, <span class="string">"boot completed action has got"</span>, Toast.LENGTH_LONG).show();</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p><strong>2、自启动失败的原因</strong><br>接收不到BOOT_COMPLETED广播可能的原因<br>(1)、BOOT_COMPLETED对应的action和uses-permission没有一起添加<br>(2)、应用安装到了sd卡内，安装在sd卡内的应用是收不到BOOT_COMPLETED广播的<br><strong>(3)、系统开启了Fast Boot模式，这种模式下系统启动并不会发送BOOT_COMPLETED广播</strong><br>(4)、应用程序安装后重来没有启动过，这种情况下应用程序接收不到任何广播，包括BOOT_COMPLETED、ACTION_PACKAGE_ADDED、CONNECTIVITY_ACTION等等。<br>Android3.1之后，系统为了加强了安全性控制，应用程序安装后或是(设置)应用管理中被强制关闭后处于stopped状态，在这种状态下接收不到任何广播，除非广播带有FLAG_INCLUDE_STOPPED_PACKAGES标志，而默认所有系统广播都是FLAG_EXCLUDE_STOPPED_PACKAGES的，所以就没法通过系统广播自启动了。所以Android3.1之后<br><strong>(1)、应用程序无法在安装后自己启动<br>(2)、没有ui的程序必须通过其他应用激活才能启动，如它的Activity、Service、Content Provider被其他应用调用。</strong><br>存在一种例外，就是应用程序被adb push you.apk /system/app/下是会自动启动的，不处于stopped状态。<br><img src="http://www.trinea.cn/wp-content/uploads/2013/03/no-broadcast-received.jpg?x24892" alt="shuoming"><br><img src="http://www.trinea.cn/wp-content/uploads/2013/03/stopped-state.jpg?x24892" alt="shuoming2"><br>具体说明见：<br><a href="http://developer.android.com/about/versions/android-3.1.html#launchcontrols" target="_blank" rel="external">http://developer.android.com/about/versions/android-3.1.html#launchcontrols</a><br><a href="http://commonsware.com/blog/2011/07/13/boot-completed-regression-confirmed.html" target="_blank" rel="external">http://commonsware.com/blog/2011/07/13/boot-completed-regression-confirmed.html</a></p>
-<p><strong>3、adb发送BOOT_COMPLETED</strong><br>我们可以通过<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell am broadcast -a android.intent.action.BOOT_COMPLETED</div></pre></td></tr></table></figure></p>
+<h2 id="2、自启动失败的原因"><a href="#2、自启动失败的原因" class="headerlink" title="2、自启动失败的原因"></a>2、自启动失败的原因</h2><p>接收不到BOOT_COMPLETED广播可能的原因<br>(1)、BOOT_COMPLETED对应的action和uses-permission没有一起添加<br>(2)、应用安装到了sd卡内，安装在sd卡内的应用是收不到BOOT_COMPLETED广播的<br><strong>(3)、系统开启了Fast Boot模式，这种模式下系统启动并不会发送BOOT_COMPLETED广播</strong><br>(4)、应用程序安装后重来没有启动过，这种情况下应用程序接收不到任何广播，包括BOOT_COMPLETED、ACTION_PACKAGE_ADDED、CONNECTIVITY_ACTION等等。<br>Android3.1之后，系统为了加强了安全性控制，应用程序安装后或是(设置)应用管理中被强制关闭后处于stopped状态，在这种状态下接收不到任何广播，除非广播带有FLAG_INCLUDE_STOPPED_PACKAGES标志，而默认所有系统广播都是FLAG_EXCLUDE_STOPPED_PACKAGES的，所以就没法通过系统广播自启动了。所以Android3.1之后<br><strong>(1)、应用程序无法在安装后自己启动<br>(2)、没有ui的程序必须通过其他应用激活才能启动，如它的Activity、Service、Content Provider被其他应用调用。</strong><br>存在一种例外，就是应用程序被adb push you.apk /system/app/下是会自动启动的，不处于stopped状态。<br><img src="http://www.trinea.cn/wp-content/uploads/2013/03/no-broadcast-received.jpg?x24892" alt="shuoming"><br><img src="http://www.trinea.cn/wp-content/uploads/2013/03/stopped-state.jpg?x24892" alt="shuoming2"><br>具体说明见：<br><a href="http://developer.android.com/about/versions/android-3.1.html#launchcontrols" target="_blank" rel="external">http://developer.android.com/about/versions/android-3.1.html#launchcontrols</a><br><a href="http://commonsware.com/blog/2011/07/13/boot-completed-regression-confirmed.html" target="_blank" rel="external">http://commonsware.com/blog/2011/07/13/boot-completed-regression-confirmed.html</a></p>
+<h2 id="3、adb发送BOOT-COMPLETED"><a href="#3、adb发送BOOT-COMPLETED" class="headerlink" title="3、adb发送BOOT_COMPLETED"></a>3、adb发送BOOT_COMPLETED</h2><p>我们可以通过<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell am broadcast -a android.intent.action.BOOT_COMPLETED</div></pre></td></tr></table></figure></p>
 <p>命令发送BOOT_COMPLETED广播，而不用重启测试机或模拟器来测试BOOT_COMPLETED广播，这条命令可以更精确的发送到某个package，如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">adb shell am broadcast -a android.intent.action.BOOT_COMPLETED -c android.intent.category.HOME -n package_name/class_name</div></pre></td></tr></table></figure></p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2016/12/26/android-start-with-open/" data-id="cix5unzje0001xcoxexj1sz3i" class="article-share-link">Partager</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
-
-    </footer>
-  </div>
-  
     
-<nav id="article-nav">
-  
-  
-    <a href="/2016/12/23/My-New-Post/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Ancien</strong>
-      <div class="article-nav-title">Markdown简明语法</div>
-    </a>
-  
-</nav>
+  </div>
+  <footer>
+    
+      
+      
+  <div class="tags">
+    <a class="tags-link" href="/tags/Android/">Android</a>
+  </div>
 
-  
+    
+    <div class="clearfix"></div>
+  </footer>
 </article>
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Mot-clés</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/">Android</a></li></ul>
-    </div>
+</div>
   </div>
-
-
+  <footer id="footer"><div class="copyright">
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Nuage de mot-clés</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Android/" style="font-size: 10px;">Android</a>
-    </div>
-  </div>
-
+  &copy; 2016 <a href="/">ShawnLWang</a>
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">December 2016</a></li></ul>
-    </div>
-  </div>
+</div>
+<div class="theme-copyright">
+  Theme by <a href="https://github.com/orderedlist" target="_blank">orderedlist</a>
+   | 
+  Redesign by <a href="http://heroicyang.com/" target="_blank">Heroic Yang</a>
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+<script src="/js/scale.fix.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
 
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Articles récents</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2016/12/26/android-start-with-open/">Android应用如何开机自启动、自启动失败原因</a>
-          </li>
-        
-          <li>
-            <a href="/2016/12/23/My-New-Post/">Markdown简明语法</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2016 ShawnLWang<br>
-      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
 
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox();
+  })(jQuery);
+</script>
 
-
-<script src="/js/script.js"></script>
-
-  </div>
 </body>
 </html>

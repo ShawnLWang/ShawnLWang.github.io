@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  
+  <title>service保活记录 | ShawnLWang&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  
+    <meta name="author" content="ShawnLWang">
+  
+  
+    <meta name="description" content="作者：闭关写代码链接：https://www.zhihu.com/question/29826231/answer/71207109来源：知乎著作权归作者所有，转载请联系作者获得授权。
+从技术角度概括一下现在普遍的防杀方法Service设置成START_STICKY，kill 后会被重启（等待5秒左右），重传Intent，保持与重启前一样​通过 startForeground将进程设置为前台进程，">
+  
+  <meta name="description" content="作者：闭关写代码链接：https://www.zhihu.com/question/29826231/answer/71207109来源：知乎著作权归作者所有，转载请联系作者获得授权。
+从技术角度概括一下现在普遍的防杀方法Service设置成START_STICKY，kill 后会被重启（等待5秒左右），重传Intent，保持与重启前一样​通过 startForeground将进程设置为前台进程，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="service保活记录">
+<meta property="og:url" content="http://yoursite.com/2016/12/27/services-keep-alive/index.html">
+<meta property="og:site_name" content="ShawnLWang's Blog">
+<meta property="og:description" content="作者：闭关写代码链接：https://www.zhihu.com/question/29826231/answer/71207109来源：知乎著作权归作者所有，转载请联系作者获得授权。
+从技术角度概括一下现在普遍的防杀方法Service设置成START_STICKY，kill 后会被重启（等待5秒左右），重传Intent，保持与重启前一样​通过 startForeground将进程设置为前台进程，">
+<meta property="og:updated_time" content="2016-12-27T08:56:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="service保活记录">
+<meta name="twitter:description" content="作者：闭关写代码链接：https://www.zhihu.com/question/29826231/answer/71207109来源：知乎著作权归作者所有，转载请联系作者获得授权。
+从技术角度概括一下现在普遍的防杀方法Service设置成START_STICKY，kill 后会被重启（等待5秒左右），重传Intent，保持与重启前一样​通过 startForeground将进程设置为前台进程，">
+  
+    <link rel="alternate" href="/atom.xml" title="ShawnLWang&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+</head>
+
+<body>
+  <div class="wrapper">
+    <header id="header">
+  <div class="title">
+    <h1><a href="/">ShawnLWang&#39;s Blog</a></h1>
+    <p><a href="/"></a></p>
+  </div>
+  <nav class="nav">
+    <ul>
+      
+        <li><a href="/">Home</a></li>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+      
+        <li><a href="/atom.xml">RSS</a></li>
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+  <div class="clearfix"></div>
+</header>
+    <div class="content"><article class="post">
+  <header>
+    
+      <div class="icon"></div>
+      <a href="/2016/12/27/services-keep-alive/">
+  <time datetime="2016-12-27T08:55:21.000Z">
+    2016-12-27
+  </time>
+</a>
+    
+    
+  
+    <h1 class="title">service保活记录</h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>作者：闭关写代码<br>链接：<a href="https://www.zhihu.com/question/29826231/answer/71207109" target="_blank" rel="external">https://www.zhihu.com/question/29826231/answer/71207109</a><br>来源：知乎<br>著作权归作者所有，转载请联系作者获得授权。</p>
+<p>从技术角度概括一下现在普遍的防杀方法<br>Service设置成START_STICKY，kill 后会被重启（等待5秒左右），重传Intent，保持与重启前一样<br>​通过 startForeground将进程设置为前台进程，做前台服务，优先级和前台应用一个级别​，除非在系统内存非常缺，否则此进程不会被 kill<br>双进程Service：让2个进程互相保护，其中一个Service被清理后，另外没被清理的进程可以立即重启进程<br>QQ黑科技:在应用退到后台后，另起一个只有 1 像素的页面停留在桌面上，让自己保持前台状态，保护自己不被后台清理工具杀死<br>在已经root的设备下，修改相应的权限文件，将App伪装成系统级的应用（Android4.0系列的一个漏洞，已经确认可行）<br>Android系统中当前进程(Process)fork出来的子进程，被系统认为是两个不同的进程。当父进程被杀死的时候，子进程仍然可以存活，并不受影响。鉴于目前提到的在Android-Service层做双守护都会失败，我们可以fork出c进程，多进程守护。死循环在那检查是否还存在，具体的思路如下（Android5.0以下可行）<br>用C编写守护进程(即子进程)，守护进程做的事情就是循环检查目标进程是否存在，不存在则启动它。<br>在NDK环境中将1中编写的C代码编译打包成可执行文件(BUILD_EXECUTABLE)。<br>主进程启动时将守护进程放入私有目录下，赋予可执行权限，启动它即可。</p>
+<h2 id="联系厂商，加入白名单"><a href="#联系厂商，加入白名单" class="headerlink" title="联系厂商，加入白名单"></a>联系厂商，加入白名单</h2><p>TIP: 面对各种流氓软件后台常驻问题，建议使用“绿色守护”来解决，可是杀掉那些第三方清理工具难以清除的后台程序</p>
+
+    
+  </div>
+  <footer>
+    
+      
+      
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+</div>
+  </div>
+  <footer id="footer"><div class="copyright">
+  
+  &copy; 2016 <a href="/">ShawnLWang</a>
+  
+</div>
+<div class="theme-copyright">
+  Theme by <a href="https://github.com/orderedlist" target="_blank">orderedlist</a>
+   | 
+  Redesign by <a href="http://heroicyang.com/" target="_blank">Heroic Yang</a>
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+<script src="/js/scale.fix.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox();
+  })(jQuery);
+</script>
+
+</body>
+</html>
